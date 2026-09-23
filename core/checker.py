@@ -1,77 +1,80 @@
-"""Текстовая нормализация и сравнение SQL-запросов."""
-import re
+"""Проверка SQL-запросов через реальное выполнение в PostgreSQL."""
+import psycopg2
 
-_STRING_LITERAL = re.compile(r"('(?:[^'\\]|\\.)*')")
-_WHITESPACE = re.compile(r"\s+")
-_SPACE_AROUND_COMMA = re.compile(r"\s*,\s*")
-_SPACE_AROUND_PAREN_OPEN = re.compile(r"\s*\(\s*")
-_SPACE_AROUND_PAREN_CLOSE = re.compile(r"\s*\)\s*")
+from core.db import get_connection
 
 
-def normalize_sql(query: str) -> str:
-    """Приводит запрос к каноническому виду для сравнения.
+def _row_sort_key(row):
+    """Ключ сортировки, устойчивый к NULL и разнотипным значениям в колонке.
 
-    - убирает пробелы по краям и завершающую ';'
-    - lower() для всего, кроме содержимого строковых литералов в кавычках
-    - схлопывает пробелы/переносы строк в один пробел
-    - убирает пробелы вокруг , ( )
+    Сравнивать сырые значения напрямую (sorted(rows)) небезопасно: если в
+    одной колонке встречаются и NULL, и обычные значения, Python не умеет
+    их сравнивать между собой и падает с TypeError. Строковый ключ решает
+    это и заодно даёт стабильный порядок для сравнения "как мультимножеств".
     """
-    query = query.strip()
-    if query.endswith(";"):
-        query = query[:-1].rstrip()
-
-    # Разбиваем на куски: чётные индексы - обычный SQL, нечётные - строки в кавычках
-    parts = _STRING_LITERAL.split(query)
-    for i in range(0, len(parts), 2):
-        parts[i] = parts[i].lower()
-    result = "".join(parts)
-
-    result = _WHITESPACE.sub(" ", result).strip()
-    result = _SPACE_AROUND_COMMA.sub(",", result)
-    result = _SPACE_AROUND_PAREN_OPEN.sub("(", result)
-    result = _SPACE_AROUND_PAREN_CLOSE.sub(")", result)
-    return result
+    return tuple((value is None, str(value)) for value in row)
 
 
-def _first_diff_message(user_norm: str, answer_norm: str) -> str:
-    """Находит первое расхождение и описывает его человеко-читаемо."""
-    min_len = min(len(user_norm), len(answer_norm))
-    idx = 0
-    while idx < min_len and user_norm[idx] == answer_norm[idx]:
-        idx += 1
+def _execute_select(conn, query: str):
+    """Выполняет один SELECT-запрос в отдельном курсоре.
 
-    context = 12
-    start = max(0, idx - context)
-
-    if idx >= len(user_norm) and idx < len(answer_norm):
-        return (
-            f"Запрос обрывается раньше, чем нужно. После "
-            f"«...{user_norm[start:idx]}» ожидалось продолжение: "
-            f"«{answer_norm[idx:idx + context]}...»"
-        )
-    if idx >= len(answer_norm) and idx < len(user_norm):
-        return (
-            f"В запросе есть лишнее в конце. После «...{answer_norm[start:idx]}» "
-            f"не должно быть: «{user_norm[idx:idx + context]}...»"
-        )
-
-    got = user_norm[idx:idx + context]
-    expected = answer_norm[idx:idx + context]
-    return (
-        f"Расхождение примерно на позиции {idx}: "
-        f"у тебя «...{got}...», а ожидается «...{expected}...»"
-    )
+    Возвращает (columns, rows, error_message). Изменения запроса всегда
+    откатываются (ROLLBACK) сразу после выполнения — даже если запрос
+    вернул результат без ошибок, — чтобы в БД ничего не сохранялось.
+    """
+    cur = conn.cursor()
+    try:
+        cur.execute(query)
+        if cur.description is None:
+            return None, None, "Запрос должен быть SELECT-запросом (нет набора строк для вывода)."
+        columns = [col.name for col in cur.description]
+        rows = cur.fetchall()
+        return columns, rows, None
+    except psycopg2.Error as exc:
+        message = (exc.pgerror or str(exc)).strip()
+        return None, None, f"Ошибка выполнения запроса: {message}"
+    finally:
+        cur.close()
+        conn.rollback()
 
 
 def compare_query(user_input: str, answer: str) -> tuple[bool, str]:
-    """Сравнивает запрос пользователя с эталоном. Возвращает (correct, message)."""
+    """Сравнивает запрос пользователя с эталоном, выполняя оба в PostgreSQL.
+
+    Порядок строк не важен (сравниваются как мультимножества), порядок и
+    названия колонок — важны, они сверяются как список.
+    """
     if not user_input or not user_input.strip():
         return False, "Пустой запрос."
 
-    user_norm = normalize_sql(user_input)
-    answer_norm = normalize_sql(answer)
+    conn = get_connection()
+    try:
+        answer_cols, answer_rows, answer_err = _execute_select(conn, answer)
+        if answer_err:
+            return False, (
+                f"Ошибка в эталонном запросе карточки (сообщите об этом "
+                f"преподавателю): {answer_err}"
+            )
 
-    if user_norm == answer_norm:
-        return True, "Верно!"
+        user_cols, user_rows, user_err = _execute_select(conn, user_input)
+        if user_err:
+            return False, user_err
+    finally:
+        conn.close()
 
-    return False, _first_diff_message(user_norm, answer_norm)
+    if user_cols != answer_cols:
+        return False, (
+            f"Названия колонок не совпадают: ожидалось {answer_cols}, "
+            f"получено {user_cols}"
+        )
+
+    if len(user_rows) != len(answer_rows):
+        return False, (
+            f"Количество строк не совпадает: ожидалось {len(answer_rows)}, "
+            f"получено {len(user_rows)}"
+        )
+
+    if sorted(user_rows, key=_row_sort_key) != sorted(answer_rows, key=_row_sort_key):
+        return False, "Данные в строках различаются."
+
+    return True, "Верно!"

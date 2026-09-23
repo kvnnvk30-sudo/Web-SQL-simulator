@@ -42,6 +42,14 @@
     btn.addEventListener("click", () => activateTab(btn.dataset.tab));
   });
 
+  // Схема открыта по умолчанию при загрузке страницы — отрисуем
+  // диаграмму сразу, иначе она останется пустой до первого клика
+  // по вкладке (getBoundingClientRect у скрытых элементов даёт 0).
+  const initialSchemaPanel = document.querySelector('[data-tab-panel="schema"]');
+  if (initialSchemaPanel && !initialSchemaPanel.hasAttribute("hidden")) {
+    requestAnimationFrame(drawSchemaDiagram);
+  }
+
   // --- ER-диаграмма схемы: линии связей между таблицами ---
   function drawSchemaDiagram() {
     const container = document.getElementById("schemaDiagram");

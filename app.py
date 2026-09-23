@@ -10,10 +10,16 @@ from core.card_loader import (
     update_card,
 )
 from core.checker import compare_query
+from core.db_init import init_db
 from core.schema_parser import flatten_links, parse_schema
 from core.schema_store import load_shared_schema
 
 app = Flask(__name__)
+
+# Пересоздаём учебную БД в PostgreSQL при каждом старте приложения:
+# дропаем старые таблицы и заново выполняем schema/database.sql
+# (CREATE TABLE + тестовые INSERT).
+init_db()
 
 SCHEMA_TABLES = parse_schema(load_shared_schema())
 SCHEMA_LINKS = flatten_links(SCHEMA_TABLES)

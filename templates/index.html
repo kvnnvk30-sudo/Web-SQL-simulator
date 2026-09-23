@@ -43,13 +43,13 @@
     </div>
 
     <div class="result-tabs">
-      <button class="tab-btn tab-btn-active" data-tab="result" type="button">Результат</button>
-      <button class="tab-btn" data-tab="schema" type="button">Схема</button>
+      <button class="tab-btn" data-tab="result" type="button">Результат</button>
+      <button class="tab-btn tab-btn-active" data-tab="schema" type="button">Схема</button>
     </div>
-    <div class="tab-panel" data-tab-panel="result">
+    <div class="tab-panel" data-tab-panel="result" hidden>
       <div class="terminal-result" id="result">Здесь появится результат проверки запроса.</div>
     </div>
-    <div class="tab-panel" data-tab-panel="schema" hidden>
+    <div class="tab-panel" data-tab-panel="schema">
       <div class="schema-diagram" id="schemaDiagram">
         <svg class="schema-links" id="schemaLinks"></svg>
         <div class="schema-tables">

@@ -1,0 +1,6 @@
+id: 17
+title: "Города с несколькими рейсами"
+task: |
+  Выведи города отправления, из которых выполняется более
+  одного рейса.
+answer: "SELECT town_from FROM Trip GROUP BY town_from HAVING COUNT(*) > 1;"

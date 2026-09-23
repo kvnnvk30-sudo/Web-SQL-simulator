@@ -1,0 +1,6 @@
+id: 16
+title: "Топ-5 самых дальних рейсов"
+task: |
+  Выведи id, город отправления и город прибытия пяти рейсов
+  с наибольшей дальностью.
+answer: "SELECT id, town_from, town_to FROM Trip ORDER BY distance DESC LIMIT 5;"

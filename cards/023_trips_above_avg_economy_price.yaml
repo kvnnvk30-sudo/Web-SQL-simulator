@@ -1,0 +1,7 @@
+id: 23
+title: "Рейсы с ценой эконом-класса выше средней"
+task: |
+  Выведи id рейсов, на которые продан хотя бы один билет
+  эконом-класса ('economy') дороже средней цены билета
+  эконом-класса по всем рейсам.
+answer: "SELECT DISTINCT trip FROM Pass_in_trip WHERE class = 'economy' AND price > (SELECT AVG(price) FROM Pass_in_trip WHERE class = 'economy');"

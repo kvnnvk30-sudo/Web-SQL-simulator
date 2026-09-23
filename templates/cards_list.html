@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Карточки — sql_trainer{% endblock %}
+
+{% block content %}
+<div class="list-header">
+  <h1 class="list-title">Карточки</h1>
+  <a class="run-btn" href="{{ url_for('cards_new') }}">+ Новая карточка</a>
+</div>
+
+{% if cards %}
+<table class="cards-table">
+  <thead>
+    <tr><th>№</th><th>Название</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for c in cards %}
+    <tr>
+      <td class="cards-table-id">{{ "%03d"|format(c.id) }}</td>
+      <td>
+        <a class="cards-table-title" href="{{ url_for('card_detail', card_id=c.id) }}">{{ c.title }}</a>
+      </td>
+      <td class="cards-table-actions">
+        <a href="{{ url_for('cards_edit', card_id=c.id) }}">редактировать</a>
+        <form action="{{ url_for('cards_delete', card_id=c.id) }}" method="post"
+              onsubmit="return confirm('Удалить карточку «{{ c.title }}»?');">
+          <button type="submit">удалить</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <p>Карточек пока нет.</p>
+  <a class="run-btn" href="{{ url_for('cards_new') }}">Создать первую карточку</a>
+</div>
+{% endif %}
+{% endblock %}

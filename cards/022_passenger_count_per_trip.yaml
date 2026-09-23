@@ -1,0 +1,7 @@
+id: 22
+title: "Количество пассажиров на каждом рейсе"
+task: |
+  Для каждого рейса выведи его id и количество проданных на
+  него билетов, включая рейсы без единого пассажира (для таких
+  рейсов должен быть выведен ноль).
+answer: "SELECT Trip.id, COUNT(Pass_in_trip.id) FROM Trip LEFT JOIN Pass_in_trip ON Pass_in_trip.trip = Trip.id GROUP BY Trip.id;"

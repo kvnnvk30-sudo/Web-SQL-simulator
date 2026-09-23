@@ -1,0 +1,5 @@
+id: 9
+title: "Средняя цена по классам"
+task: |
+  Для каждого класса обслуживания выведи среднюю цену билета.
+answer: "SELECT class, AVG(price) FROM Pass_in_trip GROUP BY class;"

@@ -1,0 +1,6 @@
+id: 18
+title: "Пассажиры Aeroflot"
+task: |
+  Выведи имена пассажиров, которые хотя бы раз летали рейсами
+  компании 'Aeroflot'.
+answer: "SELECT DISTINCT Passenger.name FROM Passenger JOIN Pass_in_trip ON Passenger.id = Pass_in_trip.passenger JOIN Trip ON Trip.id = Pass_in_trip.trip JOIN Company ON Company.id = Trip.company WHERE Company.name = 'Aeroflot';"

@@ -1,0 +1,6 @@
+id: 3
+title: "Рейсы и авиакомпании"
+task: |
+  Для каждого рейса выведи его id и название авиакомпании,
+  которая его выполняет (объедини Trip и Company).
+answer: "SELECT Trip.id, Company.name FROM Trip JOIN Company ON Trip.company = Company.id;"

@@ -1,0 +1,6 @@
+id: 5
+title: "Дальние рейсы"
+task: |
+  Выведи id, город отправления и город прибытия для всех рейсов
+  дальностью более 5000 километров.
+answer: "SELECT id, town_from, town_to FROM Trip WHERE distance > 5000;"

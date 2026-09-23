@@ -1,0 +1,5 @@
+id: 2
+title: "Рейсы из Нью-Йорка"
+task: |
+  Выведи все рейсы, совершённые из города Нью-Йорк.
+answer: "SELECT * FROM Trip WHERE town_from = 'New York';"

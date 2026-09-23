@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Тренажёр — sql_trainer{% endblock %}
+
+{% block content %}
+{% if card %}
+<div class="layout" data-card-id="{{ card.id }}">
+
+  <aside class="side-panel">
+    <div class="task-block">
+      <span class="pane-label">Задание №{{ card.id }}</span>
+      <h1 class="task-title">{{ card.title }}</h1>
+      <p class="task-text">{{ card.task }}</p>
+      <button class="answer-toggle" id="answerToggle" type="button">Показать эталонный запрос</button>
+      <pre class="answer-reveal" id="answerReveal" hidden>{{ card.answer }}</pre>
+    </div>
+
+    <div class="task-list-block">
+      <span class="pane-label">Задания</span>
+      <div class="task-list">
+        {% for c in cards %}
+        <a class="task-list-item {% if c.id == card.id %}task-list-item-active{% endif %}"
+           href="{{ url_for('card_detail', card_id=c.id) }}">
+          <span class="task-list-marker"></span>
+          <span class="task-list-title">{{ "%03d"|format(c.id) }}. {{ c.title }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </aside>
+
+  <section class="main-panel">
+    <div class="terminal">
+      <div class="terminal-titlebar">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span class="terminal-path">query.sql</span>
+      </div>
+      <textarea class="terminal-input" id="queryInput" spellcheck="false"
+        placeholder="SELECT ..."></textarea>
+      <div class="terminal-actions">
+        <button class="run-btn" id="runBtn" type="button">Выполнить</button>
+        <span class="run-hint">Ctrl + Enter</span>
+      </div>
+    </div>
+
+    <div class="result-tabs">
+      <button class="tab-btn tab-btn-active" data-tab="result" type="button">Результат</button>
+      <button class="tab-btn" data-tab="schema" type="button">Схема</button>
+    </div>
+    <div class="tab-panel" data-tab-panel="result">
+      <div class="terminal-result" id="result">Здесь появится результат проверки запроса.</div>
+    </div>
+    <div class="tab-panel" data-tab-panel="schema" hidden>
+      <div class="schema-diagram" id="schemaDiagram">
+        <svg class="schema-links" id="schemaLinks"></svg>
+        <div class="schema-tables">
+          {% for t in schema_tables %}
+          <div class="schema-table">
+            <div class="schema-table-title">{{ t.name }}</div>
+            <div class="schema-table-cols">
+              {% for col in t.columns %}
+              <div class="schema-col {% if col.pk %}schema-col-pk{% endif %}"
+                   id="schema-col-{{ t.name }}-{{ col.name }}">
+                <span class="schema-col-key">{% if col.pk %}🔑{% endif %}</span>
+                <span class="schema-col-name">{{ col.name }}</span>
+                <span class="schema-col-type">{{ col.type }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <script type="application/json" id="schemaLinksData">{{ schema_links|tojson }}</script>
+    </div>
+  </section>
+
+</div>
+
+{% else %}
+<div class="empty-state">
+  <p>Карточек пока нет.</p>
+  <a class="run-btn" href="{{ url_for('cards_new') }}">Создать первую карточку</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if card %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endif %}
+{% endblock %}

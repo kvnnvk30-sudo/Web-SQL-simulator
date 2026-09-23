@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{% if card %}Редактирование{% else %}Новая карточка{% endif %} — sql_trainer{% endblock %}
+
+{% block content %}
+<div class="form-wrap">
+  <h1 class="list-title">{% if card %}Редактировать карточку №{{ "%03d"|format(card.id) }}{% else %}Новая карточка{% endif %}</h1>
+  <p class="form-hint">Схема БД общая для всех заданий — её можно изменить в файле <code>schema/database.sql</code>.</p>
+
+  <form class="card-form"
+        method="post"
+        action="{% if card %}{{ url_for('cards_edit', card_id=card.id) }}{% else %}{{ url_for('cards_new') }}{% endif %}">
+
+    <label class="field-label" for="title">Название</label>
+    <input class="field-input" type="text" id="title" name="title" required
+           value="{{ card.title if card else '' }}">
+
+    <label class="field-label" for="task">Задание (лицевая сторона)</label>
+    <textarea class="field-textarea" id="task" name="task" rows="4" required>{{ card.task if card else '' }}</textarea>
+
+    <label class="field-label" for="answer">Эталонный запрос</label>
+    <textarea class="field-textarea field-mono" id="answer" name="answer" rows="3" required>{{ card.answer if card else '' }}</textarea>
+
+    <div class="form-actions">
+      <button class="run-btn" type="submit">{% if card %}Сохранить{% else %}Создать{% endif %}</button>
+      <a class="form-cancel" href="{{ url_for('cards_list') }}">отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

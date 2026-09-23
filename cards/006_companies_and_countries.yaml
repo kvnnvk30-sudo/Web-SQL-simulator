@@ -1,0 +1,6 @@
+id: 6
+title: "Авиакомпании и страны"
+task: |
+  Для каждой авиакомпании выведи её название и название страны,
+  в которой она зарегистрирована.
+answer: "SELECT Company.name, Country.name FROM Company JOIN Country ON Company.country = Country.id;"

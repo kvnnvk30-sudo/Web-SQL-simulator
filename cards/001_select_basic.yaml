@@ -1,0 +1,5 @@
+id: 1
+title: "Имена всех пассажиров"
+task: |
+  Выведи имена всех пассажиров.
+answer: "SELECT name FROM Passenger;"

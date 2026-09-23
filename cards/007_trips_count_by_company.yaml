@@ -1,0 +1,6 @@
+id: 7
+title: "Количество рейсов по компаниям"
+task: |
+  Для каждой авиакомпании выведи её название и количество
+  выполняемых ею рейсов.
+answer: "SELECT Company.name, COUNT(*) FROM Company JOIN Trip ON Trip.company = Company.id GROUP BY Company.name;"

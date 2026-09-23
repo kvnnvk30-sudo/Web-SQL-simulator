@@ -1,0 +1,6 @@
+id: 10
+title: "Выручка авиакомпаний"
+task: |
+  Для каждой авиакомпании выведи её название и суммарную выручку
+  от всех проданных на её рейсы билетов.
+answer: "SELECT Company.name, SUM(Pass_in_trip.price) FROM Company JOIN Trip ON Trip.company = Company.id JOIN Pass_in_trip ON Pass_in_trip.trip = Trip.id GROUP BY Company.name;"

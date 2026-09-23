@@ -1,0 +1,6 @@
+id: 4
+title: "Пассажиры бизнес-класса"
+task: |
+  Выведи имена всех пассажиров, которые хотя бы раз летели
+  местом класса 'business'.
+answer: "SELECT DISTINCT Passenger.name FROM Passenger JOIN Pass_in_trip ON Passenger.id = Pass_in_trip.passenger WHERE Pass_in_trip.class = 'business';"

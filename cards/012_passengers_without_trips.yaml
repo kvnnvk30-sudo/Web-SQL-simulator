@@ -1,0 +1,5 @@
+id: 12
+title: "Пассажиры без перелётов"
+task: |
+  Выведи имена пассажиров, которые ни разу не летали.
+answer: "SELECT Passenger.name FROM Passenger LEFT JOIN Pass_in_trip ON Passenger.id = Pass_in_trip.passenger WHERE Pass_in_trip.id IS NULL;"

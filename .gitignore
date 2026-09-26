@@ -1,0 +1,43 @@
+# --- Секреты / локальная конфигурация ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+
+# --- Виртуальные окружения ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Кэши инструментов ---
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.pycache/
+
+# --- IDE / редакторы ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- PostgreSQL (если поднимают локально данные/дампы) ---
+*.sql.bak
+pgdata/
+
+# --- ОС ---
+.DS_Store
+Thumbs.db
+
+# --- Логи ---
+*.log

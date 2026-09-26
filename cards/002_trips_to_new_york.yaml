@@ -1,0 +1,5 @@
+id: 2
+title: "Рейсы в Нью-Йорк"
+task: |
+  Выведи все рейсы, прибывающие в город Нью-Йорк.
+answer: "SELECT id, company, plane, town_from, town_to, time_out, time_in, distance FROM Trip WHERE town_to = 'New York';"

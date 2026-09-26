@@ -1,7 +1,7 @@
-id: 19
+id: 18
 title: "Самолёты на нескольких направлениях"
 task: |
   Выведи названия самолётов (plane), которые выполняют рейсы
   более чем по одному уникальному направлению (пара
   город отправления / город прибытия).
-answer: "SELECT DISTINCT t1.plane FROM Trip t1 JOIN Trip t2 ON t1.plane = t2.plane AND t1.id <> t2.id AND (t1.town_from <> t2.town_from OR t1.town_to <> t2.town_to);"
+answer: "SELECT plane FROM Trip GROUP BY plane HAVING COUNT(DISTINCT town_from || '-' || town_to) > 1;"

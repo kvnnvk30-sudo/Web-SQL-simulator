@@ -1,5 +1,5 @@
-id: 11
+id: 17
 title: "Часто летающие пассажиры"
 task: |
   Выведи имена пассажиров, которые летали более одного раза.
-answer: "SELECT Passenger.name FROM Passenger JOIN Pass_in_trip ON Passenger.id = Pass_in_trip.passenger GROUP BY Passenger.name HAVING COUNT(*) > 1;"
+answer: "SELECT Passenger.name FROM Passenger JOIN Pass_in_trip ON Passenger.id = Pass_in_trip.passenger GROUP BY Passenger.id, Passenger.name HAVING COUNT(*) > 1;"

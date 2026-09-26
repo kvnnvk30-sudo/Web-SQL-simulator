@@ -1,6 +1,0 @@
-id: 20
-title: "Страны с рейсами из Чикаго"
-task: |
-  Выведи названия стран, авиакомпании которых выполняют рейсы
-  из города Chicago.
-answer: "SELECT DISTINCT Country.name FROM Country JOIN Company ON Company.country = Country.id JOIN Trip ON Trip.company = Company.id WHERE Trip.town_from = 'Chicago';"

@@ -102,13 +102,58 @@
   const runBtn = document.getElementById("runBtn");
   const result = document.getElementById("result");
 
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value;
+    return div.innerHTML;
+  }
+
+  function formatCell(value) {
+    return value === null || value === undefined ? "NULL" : String(value);
+  }
+
+  // Рендерит запрос пользователя, статус, таблицу результата (если есть)
+  // и текст сообщения — по данным, которые вернул /check.
+  function renderResult(data) {
+    const statusClass = data.correct ? "is-ok" : "is-err";
+    const statusText = data.correct ? "✅ Верно" : "❌ Неверно";
+
+    let html = "";
+
+    html += '<div class="result-query">';
+    html += '<div class="result-query-label">Запрос</div>';
+    html += `<pre class="result-query-code">${escapeHtml(data.query || "")}</pre>`;
+    html += "</div>";
+
+    html += `<div class="result-status ${statusClass}">${statusText}</div>`;
+
+    if (Array.isArray(data.columns) && data.columns.length && Array.isArray(data.rows)) {
+      html += '<div class="result-table-wrap"><table class="result-table"><thead><tr>';
+      data.columns.forEach((col) => {
+        html += `<th>${escapeHtml(col)}</th>`;
+      });
+      html += "</tr></thead><tbody>";
+      data.rows.forEach((row) => {
+        html += "<tr>";
+        row.forEach((cell) => {
+          html += `<td>${escapeHtml(formatCell(cell))}</td>`;
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table></div>";
+    }
+
+    html += `<div class="result-message ${statusClass}">${escapeHtml(data.message || "")}</div>`;
+
+    result.innerHTML = html;
+  }
+
   async function runCheck() {
     const query = input.value;
     if (!query.trim()) return;
 
     activateTab("result");
-    result.className = "terminal-result";
-    result.textContent = "Проверяю...";
+    result.innerHTML = '<p class="result-placeholder">Проверяю...</p>';
 
     try {
       const res = await fetch("/check", {
@@ -117,14 +162,9 @@
         body: JSON.stringify({ card_id: cardId, query }),
       });
       const data = await res.json();
-
-      result.classList.remove("is-ok", "is-err");
-      result.classList.add(data.correct ? "is-ok" : "is-err");
-      result.textContent = (data.correct ? "✓ " : "✗ ") + data.message;
+      renderResult(data);
     } catch (err) {
-      result.classList.remove("is-ok");
-      result.classList.add("is-err");
-      result.textContent = "✗ Ошибка соединения с сервером.";
+      result.innerHTML = '<p class="result-placeholder is-err">✗ Ошибка соединения с сервером.</p>';
     }
   }
 

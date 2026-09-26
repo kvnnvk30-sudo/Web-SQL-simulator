@@ -1,0 +1,6 @@
+id: 11
+title: "Страны с рейсами из Москвы"
+task: |
+  Выведи названия стран, авиакомпании которых выполняют рейсы
+  из города Moscow.
+answer: "SELECT DISTINCT Country.name FROM Country JOIN Company ON Company.country = Country.id JOIN Trip ON Trip.company = Company.id WHERE Trip.town_from = 'Moscow';"

@@ -1,0 +1,6 @@
+id: 22
+title: "Самый дорогой билет"
+task: |
+  Выведи имя пассажира, место и цену билета с максимальной ценой
+  среди всех проданных билетов.
+answer: "SELECT Passenger.name, Pass_in_trip.place, Pass_in_trip.price FROM Pass_in_trip JOIN Passenger ON Passenger.id = Pass_in_trip.passenger WHERE Pass_in_trip.price = (SELECT MAX(price) FROM Pass_in_trip);"

@@ -61,10 +61,16 @@ def check():
 
     card = load_card(int(card_id)) if card_id is not None else None
     if card is None:
-        return jsonify({"correct": False, "message": "Карточка не найдена."}), 404
+        return jsonify({
+            "correct": False,
+            "message": "Карточка не найдена.",
+            "query": query,
+            "columns": [],
+            "rows": [],
+        }), 404
 
-    correct, message = compare_query(query, card["answer"])
-    return jsonify({"correct": correct, "message": message})
+    result = compare_query(query, card["answer"])
+    return jsonify(result)
 
 
 @app.route("/cards")

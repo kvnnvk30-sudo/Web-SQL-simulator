@@ -1,5 +1,0 @@
-id: 21
-title: "Пассажиры без даты рождения"
-task: |
-  Выведи имена пассажиров, у которых не указана дата рождения.
-answer: "SELECT name FROM Passenger WHERE birth_date IS NULL;"

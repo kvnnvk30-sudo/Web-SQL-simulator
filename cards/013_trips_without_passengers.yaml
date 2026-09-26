@@ -1,5 +1,0 @@
-id: 13
-title: "Рейсы без пассажиров"
-task: |
-  Выведи id рейсов, на которые не продано ни одного билета.
-answer: "SELECT Trip.id FROM Trip LEFT JOIN Pass_in_trip ON Trip.id = Pass_in_trip.trip WHERE Pass_in_trip.id IS NULL;"

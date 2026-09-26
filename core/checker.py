@@ -15,6 +15,21 @@ def _row_sort_key(row):
     return tuple((value is None, str(value)) for value in row)
 
 
+def _serialize_rows(rows):
+    """Приводит строки результата к JSON-сериализуемому виду.
+
+    psycopg2 может вернуть datetime/date/Decimal и т.п. — стандартный
+    json (и, соответственно, flask.jsonify) их не сериализует, поэтому
+    всё, что не является str/int/float/bool/None, приводим к str().
+    """
+    def _value(v):
+        if v is None or isinstance(v, (str, int, float, bool)):
+            return v
+        return str(v)
+
+    return [[_value(v) for v in row] for row in rows]
+
+
 def _execute_select(conn, query: str):
     """Выполняет один SELECT-запрос в отдельном курсоре.
 
@@ -38,43 +53,95 @@ def _execute_select(conn, query: str):
         conn.rollback()
 
 
-def compare_query(user_input: str, answer: str) -> tuple[bool, str]:
+def compare_query(user_input: str, answer: str) -> dict:
     """Сравнивает запрос пользователя с эталоном, выполняя оба в PostgreSQL.
 
     Порядок строк не важен (сравниваются как мультимножества), порядок и
     названия колонок — важны, они сверяются как список.
+
+    Возвращает словарь:
+        {"correct": bool, "message": str, "query": str,
+         "columns": list[str], "rows": list[list]}
+
+    Если запрос пользователя падает с ошибкой PostgreSQL (или это не
+    SELECT), correct=False, message содержит текст ошибки, а columns/rows
+    остаются пустыми списками.
     """
     if not user_input or not user_input.strip():
-        return False, "Пустой запрос."
+        return {
+            "correct": False,
+            "message": "Пустой запрос.",
+            "query": user_input,
+            "columns": [],
+            "rows": [],
+        }
 
     conn = get_connection()
     try:
         answer_cols, answer_rows, answer_err = _execute_select(conn, answer)
         if answer_err:
-            return False, (
-                f"Ошибка в эталонном запросе карточки (сообщите об этом "
-                f"преподавателю): {answer_err}"
-            )
+            return {
+                "correct": False,
+                "message": (
+                    f"Ошибка в эталонном запросе карточки (сообщите об этом "
+                    f"преподавателю): {answer_err}"
+                ),
+                "query": user_input,
+                "columns": [],
+                "rows": [],
+            }
 
         user_cols, user_rows, user_err = _execute_select(conn, user_input)
         if user_err:
-            return False, user_err
+            return {
+                "correct": False,
+                "message": user_err,
+                "query": user_input,
+                "columns": [],
+                "rows": [],
+            }
     finally:
         conn.close()
 
+    user_rows_serialized = _serialize_rows(user_rows)
+
     if user_cols != answer_cols:
-        return False, (
-            f"Названия колонок не совпадают: ожидалось {answer_cols}, "
-            f"получено {user_cols}"
-        )
+        return {
+            "correct": False,
+            "message": (
+                f"Названия колонок не совпадают: ожидалось {answer_cols}, "
+                f"получено {user_cols}"
+            ),
+            "query": user_input,
+            "columns": user_cols,
+            "rows": user_rows_serialized,
+        }
 
     if len(user_rows) != len(answer_rows):
-        return False, (
-            f"Количество строк не совпадает: ожидалось {len(answer_rows)}, "
-            f"получено {len(user_rows)}"
-        )
+        return {
+            "correct": False,
+            "message": (
+                f"Количество строк не совпадает: ожидалось {len(answer_rows)}, "
+                f"получено {len(user_rows)}"
+            ),
+            "query": user_input,
+            "columns": user_cols,
+            "rows": user_rows_serialized,
+        }
 
     if sorted(user_rows, key=_row_sort_key) != sorted(answer_rows, key=_row_sort_key):
-        return False, "Данные в строках различаются."
+        return {
+            "correct": False,
+            "message": "Данные в строках различаются.",
+            "query": user_input,
+            "columns": user_cols,
+            "rows": user_rows_serialized,
+        }
 
-    return True, "Верно!"
+    return {
+        "correct": True,
+        "message": "Верно!",
+        "query": user_input,
+        "columns": user_cols,
+        "rows": user_rows_serialized,
+    }

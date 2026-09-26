@@ -1,0 +1,6 @@
+id: 6
+title: "Пассажиры, чьё имя начинается на «S»"
+task: |
+  С помощью оператора LIKE выведи имена пассажиров, значение
+  поля name которых начинается с буквы 'S'.
+answer: "SELECT name FROM Passenger WHERE name LIKE 'S%';"

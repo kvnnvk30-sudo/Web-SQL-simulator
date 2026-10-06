@@ -56,12 +56,13 @@
         <svg class="schema-links" id="schemaLinks"></svg>
         <div class="schema-tables">
           {% for t in schema_tables %}
-          <div class="schema-table">
+          <div class="schema-table" data-table="{{ t.name }}">
             <div class="schema-table-title">{{ t.name }}</div>
             <div class="schema-table-cols">
               {% for col in t.columns %}
               <div class="schema-col {% if col.pk %}schema-col-pk{% endif %}"
-                   id="schema-col-{{ t.name }}-{{ col.name }}">
+                   id="schema-col-{{ t.name }}-{{ col.name }}"
+                   data-table="{{ t.name }}" data-column="{{ col.name }}" data-type="{{ col.type }}">
                 <span class="schema-col-key">{% if col.pk %}🔑{% endif %}</span>
                 <span class="schema-col-name">{{ col.name }}</span>
                 <span class="schema-col-type">{{ col.type }}</span>
@@ -83,11 +84,5 @@
   <p>Карточек пока нет.</p>
   <a class="run-btn" href="{{ url_for('cards_new') }}">Создать первую карточку</a>
 </div>
-{% endif %}
-{% endblock %}
-
-{% block scripts %}
-{% if card %}
-<script src="{{ url_for('static', filename='app.js') }}"></script>
 {% endif %}
 {% endblock %}

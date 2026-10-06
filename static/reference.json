@@ -1,0 +1,556 @@
+{
+ "entries": [
+  {
+   "id": "select",
+   "title": "SELECT",
+   "words": [
+    "select"
+   ],
+   "desc": "Выбирает колонки или выражения. Вместе с FROM это минимальный запрос.",
+   "article": "https://www.postgresql.org/docs/current/sql-select.html",
+   "video": "",
+   "code": "SELECT name FROM Passenger;"
+  },
+  {
+   "id": "from",
+   "title": "FROM",
+   "words": [
+    "from"
+   ],
+   "desc": "Указывает таблицу-источник. Другие таблицы подключаются через JOIN.",
+   "article": "https://www.postgresql.org/docs/current/queries-table-expressions.html",
+   "video": "",
+   "code": "SELECT id, plane FROM Trip;"
+  },
+  {
+   "id": "where",
+   "title": "WHERE",
+   "words": [
+    "where"
+   ],
+   "desc": "Оставляет строки, для которых условие истинно. Выполняется до группировки.",
+   "article": "https://www.postgresql.org/docs/current/sql-select.html",
+   "video": "",
+   "code": "SELECT * FROM Trip\nWHERE town_from = 'Moscow';"
+  },
+  {
+   "id": "join",
+   "title": "JOIN",
+   "words": [
+    "join",
+    "inner",
+    "left",
+    "right",
+    "full",
+    "outer",
+    "on"
+   ],
+   "desc": "Соединяет таблицы по условию ON. INNER оставляет только совпадения, LEFT сохраняет все строки левой таблицы.",
+   "article": "https://www.postgresql.org/docs/current/queries-table-expressions.html",
+   "video": "",
+   "code": "SELECT Trip.id, Company.name\nFROM Trip\nJOIN Company ON Trip.company = Company.id;"
+  },
+  {
+   "id": "group-by",
+   "title": "GROUP BY",
+   "words": [
+    "group"
+   ],
+   "desc": "Склеивает строки с одинаковым значением в группы. Обычно используется с COUNT, SUM, AVG.",
+   "article": "https://www.postgresql.org/docs/current/queries-table-expressions.html",
+   "video": "",
+   "code": "SELECT company, COUNT(*) AS trips\nFROM Trip\nGROUP BY company;"
+  },
+  {
+   "id": "having",
+   "title": "HAVING",
+   "words": [
+    "having"
+   ],
+   "desc": "Фильтрует группы после GROUP BY. WHERE фильтрует строки, HAVING фильтрует группы.",
+   "article": "https://www.postgresql.org/docs/current/queries-table-expressions.html",
+   "video": "",
+   "code": "SELECT company, COUNT(*) AS trips\nFROM Trip\nGROUP BY company\nHAVING COUNT(*) > 2;"
+  },
+  {
+   "id": "order-by",
+   "title": "ORDER BY",
+   "words": [
+    "order",
+    "asc",
+    "desc"
+   ],
+   "desc": "Сортирует результат. ASC по возрастанию (по умолчанию), DESC по убыванию.",
+   "article": "https://www.postgresql.org/docs/current/queries-order.html",
+   "video": "",
+   "code": "SELECT name, birth_date\nFROM Passenger\nORDER BY birth_date DESC;"
+  },
+  {
+   "id": "limit",
+   "title": "LIMIT, OFFSET",
+   "words": [
+    "limit",
+    "offset"
+   ],
+   "desc": "LIMIT ограничивает число строк, OFFSET пропускает первые N. Без ORDER BY порядок не гарантирован.",
+   "article": "https://www.postgresql.org/docs/current/queries-limit.html",
+   "video": "",
+   "code": "SELECT * FROM Pass_in_trip\nORDER BY price DESC\nLIMIT 1;"
+  },
+  {
+   "id": "distinct",
+   "title": "DISTINCT",
+   "words": [
+    "distinct"
+   ],
+   "desc": "Убирает повторяющиеся строки из результата.",
+   "article": "https://www.postgresql.org/docs/current/queries-select-lists.html",
+   "video": "",
+   "code": "SELECT DISTINCT town_from FROM Trip;"
+  },
+  {
+   "id": "as",
+   "title": "AS",
+   "words": [
+    "as"
+   ],
+   "desc": "Задаёт псевдоним колонке или таблице.",
+   "article": "https://www.postgresql.org/docs/current/queries-select-lists.html",
+   "video": "",
+   "code": "SELECT name AS passenger_name\nFROM Passenger;"
+  },
+  {
+   "id": "and-or-not",
+   "title": "AND, OR, NOT",
+   "words": [
+    "and",
+    "or",
+    "not"
+   ],
+   "desc": "Логические операторы условий. AND сильнее OR, поэтому смешанные условия берут в скобки.",
+   "article": "https://www.postgresql.org/docs/current/functions-logical.html",
+   "video": "",
+   "code": "SELECT * FROM Trip\nWHERE town_from = 'Moscow'\n  AND (town_to = 'Paris' OR town_to = 'London');"
+  },
+  {
+   "id": "in",
+   "title": "IN",
+   "words": [
+    "in"
+   ],
+   "desc": "Проверяет, что значение входит в список или результат подзапроса.",
+   "article": "https://www.postgresql.org/docs/current/functions-comparisons.html",
+   "video": "",
+   "code": "SELECT * FROM Trip\nWHERE town_to IN ('Paris', 'London');"
+  },
+  {
+   "id": "between",
+   "title": "BETWEEN",
+   "words": [
+    "between"
+   ],
+   "desc": "Проверяет попадание в диапазон. Границы входят в диапазон.",
+   "article": "https://www.postgresql.org/docs/current/functions-comparison.html",
+   "video": "",
+   "code": "SELECT * FROM Pass_in_trip\nWHERE price BETWEEN 100 AND 500;"
+  },
+  {
+   "id": "like",
+   "title": "LIKE, ILIKE",
+   "words": [
+    "like",
+    "ilike"
+   ],
+   "desc": "Поиск по шаблону: % любая последовательность символов, _ один символ. ILIKE не учитывает регистр.",
+   "article": "https://www.postgresql.org/docs/current/functions-matching.html",
+   "video": "",
+   "code": "SELECT * FROM Passenger\nWHERE name LIKE 'A%';"
+  },
+  {
+   "id": "is-null",
+   "title": "IS NULL",
+   "words": [
+    "null",
+    "is",
+    "isnull",
+    "notnull"
+   ],
+   "desc": "NULL нельзя сравнивать через =. Для проверки используют IS NULL и IS NOT NULL.",
+   "article": "https://www.postgresql.org/docs/current/functions-comparison.html",
+   "video": "",
+   "code": "SELECT * FROM Pass_in_trip\nWHERE place IS NULL;"
+  },
+  {
+   "id": "count",
+   "title": "COUNT",
+   "words": [
+    "count"
+   ],
+   "desc": "Считает строки. COUNT(*) считает все строки, COUNT(колонка) пропускает NULL.",
+   "article": "https://www.postgresql.org/docs/current/functions-aggregate.html",
+   "video": "",
+   "code": "SELECT COUNT(*) FROM Passenger;"
+  },
+  {
+   "id": "sum-avg",
+   "title": "SUM, AVG, MIN, MAX",
+   "words": [
+    "sum",
+    "avg",
+    "min",
+    "max"
+   ],
+   "desc": "Агрегатные функции: сумма, среднее, минимум, максимум. NULL игнорируются.",
+   "article": "https://www.postgresql.org/docs/current/functions-aggregate.html",
+   "video": "",
+   "code": "SELECT SUM(price), AVG(price),\n       MIN(price), MAX(price)\nFROM Pass_in_trip;"
+  },
+  {
+   "id": "coalesce",
+   "title": "COALESCE",
+   "words": [
+    "coalesce",
+    "nullif"
+   ],
+   "desc": "Возвращает первый аргумент, который не NULL. Удобно для подстановки значения по умолчанию.",
+   "article": "https://www.postgresql.org/docs/current/functions-conditional.html",
+   "video": "",
+   "code": "SELECT COALESCE(place, 'не указано')\nFROM Pass_in_trip;"
+  },
+  {
+   "id": "case",
+   "title": "CASE",
+   "words": [
+    "case",
+    "when",
+    "then",
+    "else",
+    "end"
+   ],
+   "desc": "Условное выражение, аналог if/else внутри запроса.",
+   "article": "https://www.postgresql.org/docs/current/functions-conditional.html",
+   "video": "",
+   "code": "SELECT id,\n       CASE WHEN price > 300 THEN 'дорогой'\n            ELSE 'дешёвый' END AS kind\nFROM Pass_in_trip;"
+  },
+  {
+   "id": "union",
+   "title": "UNION, INTERSECT, EXCEPT",
+   "words": [
+    "union",
+    "intersect",
+    "except"
+   ],
+   "desc": "Объединение, пересечение и разность результатов двух запросов. UNION убирает дубли, UNION ALL оставляет.",
+   "article": "https://www.postgresql.org/docs/current/queries-union.html",
+   "video": "",
+   "code": "SELECT name FROM Company\nUNION\nSELECT name FROM Country;"
+  },
+  {
+   "id": "round",
+   "title": "ROUND",
+   "words": [
+    "round",
+    "trunc"
+   ],
+   "desc": "Округляет число до заданного количества знаков.",
+   "article": "https://www.postgresql.org/docs/current/functions-math.html",
+   "video": "",
+   "code": "SELECT ROUND(AVG(price), 2)\nFROM Pass_in_trip;"
+  },
+  {
+   "id": "lower-upper",
+   "title": "LOWER, UPPER",
+   "words": [
+    "lower",
+    "upper",
+    "initcap"
+   ],
+   "desc": "Приводит строку к нижнему или верхнему регистру.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT UPPER(name) FROM Company;"
+  },
+  {
+   "id": "concat",
+   "title": "CONCAT, ||",
+   "words": [
+    "concat",
+    "concat_ws"
+   ],
+   "desc": "Склеивает строки. Оператор || при NULL даёт NULL, CONCAT NULL пропускает.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT CONCAT(name, ' ', birth_date)\nFROM Passenger;"
+  },
+  {
+   "id": "now",
+   "title": "NOW, CURRENT_DATE",
+   "words": [
+    "now",
+    "current_date",
+    "current_timestamp"
+   ],
+   "desc": "Текущие дата и время.",
+   "article": "https://www.postgresql.org/docs/current/functions-datetime.html",
+   "video": "",
+   "code": "SELECT NOW(), CURRENT_DATE;"
+  },
+  {
+   "id": "cast",
+   "title": "CAST, ::",
+   "words": [
+    "cast"
+   ],
+   "desc": "Приводит значение к другому типу. Короткая запись: значение::тип.",
+   "article": "https://www.postgresql.org/docs/current/sql-expressions.html",
+   "video": "",
+   "code": "SELECT CAST(price AS NUMERIC(10, 2))\nFROM Pass_in_trip;"
+  },
+  {
+   "id": "length",
+   "title": "LENGTH",
+   "words": [
+    "length",
+    "char_length"
+   ],
+   "desc": "Возвращает длину строки в символах.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT name, LENGTH(name)\nFROM Passenger;"
+  },
+  {
+   "id": "substring",
+   "title": "SUBSTRING",
+   "words": [
+    "substring",
+    "substr"
+   ],
+   "desc": "Вырезает часть строки: с какой позиции и сколько символов.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT SUBSTRING(name FROM 1 FOR 3)\nFROM Passenger;"
+  },
+  {
+   "id": "trim",
+   "title": "TRIM",
+   "words": [
+    "trim",
+    "ltrim",
+    "rtrim",
+    "btrim"
+   ],
+   "desc": "Убирает пробелы по краям строки. LTRIM только слева, RTRIM только справа.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT TRIM(name) FROM Passenger;"
+  },
+  {
+   "id": "replace",
+   "title": "REPLACE",
+   "words": [
+    "replace",
+    "translate"
+   ],
+   "desc": "Заменяет все вхождения подстроки на другую.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT REPLACE(town_from, 'Moscow', 'MSK')\nFROM Trip;"
+  },
+  {
+   "id": "strpos",
+   "title": "STRPOS, POSITION",
+   "words": [
+    "strpos",
+    "position"
+   ],
+   "desc": "Номер позиции подстроки в строке, считая с 1. Если не найдена, вернёт 0.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT name, STRPOS(name, ' ')\nFROM Passenger;"
+  },
+  {
+   "id": "split-part",
+   "title": "SPLIT_PART",
+   "words": [
+    "split_part"
+   ],
+   "desc": "Делит строку по разделителю и возвращает часть с нужным номером.",
+   "article": "https://www.postgresql.org/docs/current/functions-string.html",
+   "video": "",
+   "code": "SELECT SPLIT_PART(name, ' ', 1)\nFROM Passenger;"
+  },
+  {
+   "id": "string-agg",
+   "title": "STRING_AGG",
+   "words": [
+    "string_agg"
+   ],
+   "desc": "Склеивает значения группы в одну строку через разделитель.",
+   "article": "https://www.postgresql.org/docs/current/functions-aggregate.html",
+   "video": "",
+   "code": "SELECT company,\n       STRING_AGG(DISTINCT town_to, ', ')\nFROM Trip\nGROUP BY company;"
+  },
+  {
+   "id": "array-agg",
+   "title": "ARRAY_AGG",
+   "words": [
+    "array_agg"
+   ],
+   "desc": "Собирает значения группы в массив.",
+   "article": "https://www.postgresql.org/docs/current/functions-aggregate.html",
+   "video": "",
+   "code": "SELECT company, ARRAY_AGG(id)\nFROM Trip\nGROUP BY company;"
+  },
+  {
+   "id": "date-trunc",
+   "title": "DATE_TRUNC",
+   "words": [
+    "date_trunc"
+   ],
+   "desc": "Обрезает дату до нужной точности: день, месяц, год. Удобно для группировки по периодам.",
+   "article": "https://www.postgresql.org/docs/current/functions-datetime.html",
+   "video": "",
+   "code": "SELECT DATE_TRUNC('month', time_out) AS month,\n       COUNT(*)\nFROM Trip\nGROUP BY month;"
+  },
+  {
+   "id": "extract",
+   "title": "EXTRACT",
+   "words": [
+    "extract",
+    "date_part"
+   ],
+   "desc": "Достаёт часть даты: год, месяц, день, час.",
+   "article": "https://www.postgresql.org/docs/current/functions-datetime.html",
+   "video": "",
+   "code": "SELECT EXTRACT(YEAR FROM birth_date) AS year\nFROM Passenger;"
+  },
+  {
+   "id": "to-char",
+   "title": "TO_CHAR",
+   "words": [
+    "to_char",
+    "to_date",
+    "to_timestamp"
+   ],
+   "desc": "Форматирует дату или число в строку по шаблону.",
+   "article": "https://www.postgresql.org/docs/current/functions-formatting.html",
+   "video": "",
+   "code": "SELECT TO_CHAR(time_out, 'DD.MM.YYYY HH24:MI')\nFROM Trip;"
+  },
+  {
+   "id": "age",
+   "title": "AGE",
+   "words": [
+    "age"
+   ],
+   "desc": "Разница между датами в виде интервала. С одним аргументом считает от текущей даты.",
+   "article": "https://www.postgresql.org/docs/current/functions-datetime.html",
+   "video": "",
+   "code": "SELECT name, AGE(birth_date)\nFROM Passenger;"
+  },
+  {
+   "id": "ceil",
+   "title": "CEIL, FLOOR",
+   "words": [
+    "ceil",
+    "ceiling",
+    "floor"
+   ],
+   "desc": "CEIL округляет вверх до целого, FLOOR вниз.",
+   "article": "https://www.postgresql.org/docs/current/functions-math.html",
+   "video": "",
+   "code": "SELECT CEIL(price), FLOOR(price)\nFROM Pass_in_trip;"
+  },
+  {
+   "id": "abs",
+   "title": "ABS",
+   "words": [
+    "abs",
+    "sign"
+   ],
+   "desc": "Модуль числа.",
+   "article": "https://www.postgresql.org/docs/current/functions-math.html",
+   "video": "",
+   "code": "SELECT ABS(distance - 1000)\nFROM Trip;"
+  },
+  {
+   "id": "mod",
+   "title": "MOD, %",
+   "words": [
+    "mod",
+    "div"
+   ],
+   "desc": "Остаток от деления. Например, для отбора чётных значений.",
+   "article": "https://www.postgresql.org/docs/current/functions-math.html",
+   "video": "",
+   "code": "SELECT id FROM Trip\nWHERE MOD(id, 2) = 0;"
+  },
+  {
+   "id": "power",
+   "title": "POWER, SQRT",
+   "words": [
+    "power",
+    "pow",
+    "sqrt",
+    "exp",
+    "ln",
+    "log"
+   ],
+   "desc": "Возведение в степень и квадратный корень.",
+   "article": "https://www.postgresql.org/docs/current/functions-math.html",
+   "video": "",
+   "code": "SELECT POWER(2, 10), SQRT(144);"
+  },
+  {
+   "id": "random",
+   "title": "RANDOM",
+   "words": [
+    "random"
+   ],
+   "desc": "Случайное число от 0 до 1. С ORDER BY и LIMIT выбирает случайные строки.",
+   "article": "https://www.postgresql.org/docs/current/functions-math.html",
+   "video": "",
+   "code": "SELECT * FROM Passenger\nORDER BY RANDOM()\nLIMIT 3;"
+  },
+  {
+   "id": "greatest",
+   "title": "GREATEST, LEAST",
+   "words": [
+    "greatest",
+    "least"
+   ],
+   "desc": "Наибольшее и наименьшее из списка значений в одной строке. В отличие от MAX и MIN, работает по строке, а не по группе.",
+   "article": "https://www.postgresql.org/docs/current/functions-conditional.html",
+   "video": "",
+   "code": "SELECT GREATEST(1, 5, 3),\n       LEAST(1, 5, 3);"
+  },
+  {
+   "id": "row-number",
+   "title": "ROW_NUMBER, RANK",
+   "words": [
+    "row_number",
+    "rank",
+    "dense_rank",
+    "over",
+    "partition",
+    "lag",
+    "lead"
+   ],
+   "desc": "Оконные функции: нумерация и ранжирование без схлопывания строк. Порядок задаётся в OVER.",
+   "article": "https://www.postgresql.org/docs/current/functions-window.html",
+   "video": "",
+   "code": "SELECT name,\n       ROW_NUMBER() OVER (ORDER BY birth_date) AS n\nFROM Passenger;"
+  },
+  {
+   "id": "generate-series",
+   "title": "GENERATE_SERIES",
+   "words": [
+    "generate_series"
+   ],
+   "desc": "Генерирует ряд чисел или дат. Полезно для календарей и тестовых данных.",
+   "article": "https://www.postgresql.org/docs/current/functions-srf.html",
+   "video": "",
+   "code": "SELECT * FROM GENERATE_SERIES(1, 5);"
+  }
+ ]
+}

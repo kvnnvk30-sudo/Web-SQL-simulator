@@ -15,11 +15,50 @@
   <nav class="topnav">
     <a href="{{ url_for('index') }}">Тренажёр</a>
     <a href="{{ url_for('cards_list') }}">Карточки</a>
+    <div class="ref-wrap" id="refWrap">
+      <button class="ref-btn" id="refBtn" type="button"
+              aria-haspopup="true" aria-expanded="false" aria-controls="refPanel">? Справка</button>
+      <div class="ref-backdrop" id="refBackdrop" hidden></div>
+      <div class="ref-panel" id="refPanel" role="dialog" aria-label="Справка по SQL"
+           data-src="{{ url_for('static', filename='reference.json') }}" hidden>
+        <div class="ref-header">
+          <span class="ref-heading">Справка по SQL</span>
+          <button class="ref-close" id="refClose" type="button" aria-label="Закрыть">✕</button>
+        </div>
+        <div class="ref-body">
+          <div class="ref-side">
+            <div class="ref-top">
+              <input class="ref-search" id="refSearch" type="search" placeholder="Поиск: SELECT, JOIN..." autocomplete="off">
+              <button class="ref-ghost ref-add" id="refAdd" type="button">+ Новый</button>
+            </div>
+            <div class="ref-list" id="refList"></div>
+          </div>
+          <div class="ref-main">
+            <div class="ref-entry" id="refEntry"></div>
+          </div>
+        </div>
+        <p class="ref-hint">Ctrl + клик по слову в запросе открывает его пункт. Правки и свои пункты сохраняются в этом браузере.</p>
+      </div>
+    </div>
+    <div class="settings" id="settings">
+      <button class="settings-btn" id="settingsBtn" type="button"
+              aria-haspopup="true" aria-expanded="false" aria-controls="settingsPanel">⚙ Настройки</button>
+      <div class="settings-panel" id="settingsPanel" role="dialog" aria-label="Подсветка SQL" hidden>
+        <div class="settings-head">
+          <span class="settings-title">Подсветка SQL</span>
+          <button class="settings-reset-all" id="hlResetAll" type="button">Сбросить всё</button>
+        </div>
+        <p class="settings-note">Цвета сохраняются автоматически в этом браузере.</p>
+        <pre class="hl-preview" id="hlPreview"></pre>
+        <div class="hl-list" id="hlList"></div>
+      </div>
+    </div>
   </nav>
 </header>
 <main class="page">
 {% block content %}{% endblock %}
 </main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

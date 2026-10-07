@@ -1,0 +1,7 @@
+id: 26
+title: "Пассажиры с несколькими билетами"
+task: |
+  Выведи имена пассажиров, купивших два и более билета, и
+  количество их билетов. Столбцы назови passenger_name и
+  tickets_count.
+answer: "SELECT Passenger.name AS passenger_name, COUNT(Pass_in_trip.id) AS tickets_count FROM Passenger JOIN Pass_in_trip ON Pass_in_trip.passenger = Passenger.id GROUP BY Passenger.id, Passenger.name HAVING COUNT(Pass_in_trip.id) >= 2;"

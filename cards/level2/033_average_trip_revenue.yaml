@@ -1,0 +1,8 @@
+id: 33
+title: "Средняя выручка рейса"
+task: |
+  Сначала посчитай выручку каждого рейса (сумму цен его
+  билетов), затем выведи среднюю выручку рейса, округлённую до
+  целого. Рейсы без билетов не учитывай. Столбец назови
+  avg_trip_revenue.
+answer: "SELECT ROUND(AVG(trip_total)) AS avg_trip_revenue FROM (SELECT SUM(price) AS trip_total FROM Pass_in_trip GROUP BY trip) AS totals;"

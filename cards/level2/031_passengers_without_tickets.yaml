@@ -1,0 +1,6 @@
+id: 31
+title: "Пассажиры без билетов"
+task: |
+  Выведи имена пассажиров, у которых нет ни одного купленного
+  билета.
+answer: "SELECT name FROM Passenger WHERE id NOT IN (SELECT passenger FROM Pass_in_trip);"

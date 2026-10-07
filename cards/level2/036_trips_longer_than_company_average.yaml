@@ -1,0 +1,7 @@
+id: 36
+title: "Рейсы длиннее среднего у своей компании"
+task: |
+  Выведи рейсы, расстояние которых (distance) больше среднего
+  расстояния рейсов той же авиакомпании. Столбцы назови trip_id
+  и distance.
+answer: "SELECT t.id AS trip_id, t.distance AS distance FROM Trip t WHERE t.distance > (SELECT AVG(distance) FROM Trip WHERE company = t.company);"

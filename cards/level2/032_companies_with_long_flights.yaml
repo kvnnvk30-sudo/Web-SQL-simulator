@@ -1,0 +1,6 @@
+id: 32
+title: "Компании с дальними рейсами"
+task: |
+  Выведи названия авиакомпаний, у которых есть хотя бы один рейс
+  дальше 5000 км (поле distance).
+answer: "SELECT name FROM Company WHERE EXISTS (SELECT 1 FROM Trip WHERE Trip.company = Company.id AND Trip.distance > 5000);"

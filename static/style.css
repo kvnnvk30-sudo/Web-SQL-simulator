@@ -1134,3 +1134,37 @@ a { color: inherit; }
   .ref-main { padding: 18px; }
   .ref-title { font-size: 22px; }
 }
+/* ---------- Переключатель уровней ---------- */
+
+.level-switch {
+  display: flex;
+  gap: 6px;
+  padding: 0 12px;
+  margin-bottom: 12px;
+}
+
+.level-tab {
+  flex: 1;
+  text-align: center;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  text-decoration: none;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.level-tab:hover { color: var(--text); border-color: var(--accent); }
+
+.level-tab-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.cards-table-level { color: var(--text-dim); width: 48px; }
+
+.empty-levels { margin-top: 12px; font-size: 13px; }
+.empty-levels a { color: var(--accent); }

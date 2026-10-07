@@ -1,0 +1,9 @@
+id: 45
+title: "Место билета по цене внутри рейса"
+task: |
+  Для каждого билета с указанной ценой выведи id билета, id
+  рейса, цену и место билета по цене внутри его рейса: самый
+  дорогой билет получает 1, при равных ценах место одинаковое, а
+  следующее место пропускается. Столбцы назови ticket_id,
+  trip_id, price и price_rank.
+answer: "SELECT id AS ticket_id, trip AS trip_id, price, RANK() OVER (PARTITION BY trip ORDER BY price DESC) AS price_rank FROM Pass_in_trip WHERE price IS NOT NULL;"

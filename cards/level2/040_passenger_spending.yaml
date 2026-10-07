@@ -1,0 +1,8 @@
+id: 40
+title: "Траты пассажиров"
+task: |
+  Для каждого пассажира выведи имя и сумму, которую он потратил
+  на билеты. У пассажиров без билетов, а также если цены не
+  указаны, сумма должна быть 0, а не NULL. Столбцы назови
+  passenger_name и total_spent.
+answer: "SELECT Passenger.name AS passenger_name, COALESCE(SUM(Pass_in_trip.price), 0) AS total_spent FROM Passenger LEFT JOIN Pass_in_trip ON Pass_in_trip.passenger = Passenger.id GROUP BY Passenger.id, Passenger.name;"

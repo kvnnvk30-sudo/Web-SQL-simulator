@@ -1,0 +1,9 @@
+id: 46
+title: "Самый дорогой билет у каждой авиакомпании"
+task: |
+  Для каждой авиакомпании выведи название, имя пассажира и цену
+  самого дорогого билета, проданного на рейсы этой компании.
+  Если таких билетов несколько, выведи все. Билеты без указанной
+  цены не учитывай. Компании без проданных билетов не нужны.
+  Столбцы назови company_name, passenger_name и price.
+answer: "WITH ranked AS ( SELECT Company.name AS company_name, Passenger.name AS passenger_name, Pass_in_trip.price AS price, RANK() OVER (PARTITION BY Company.id ORDER BY Pass_in_trip.price DESC) AS rnk FROM Pass_in_trip JOIN Trip ON Trip.id = Pass_in_trip.trip JOIN Company ON Company.id = Trip.company JOIN Passenger ON Passenger.id = Pass_in_trip.passenger WHERE Pass_in_trip.price IS NOT NULL ) SELECT company_name, passenger_name, price FROM ranked WHERE rnk = 1;"

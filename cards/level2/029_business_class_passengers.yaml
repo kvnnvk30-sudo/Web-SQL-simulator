@@ -1,0 +1,6 @@
+id: 29
+title: "Кто летал бизнес-классом"
+task: |
+  Выведи имена пассажиров, которые хотя бы раз летели бизнес-
+  классом ('business'). Каждое имя должно встретиться один раз.
+answer: "SELECT name FROM Passenger WHERE id IN (SELECT passenger FROM Pass_in_trip WHERE class = 'business');"

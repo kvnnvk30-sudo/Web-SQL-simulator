@@ -1,0 +1,8 @@
+id: 38
+title: "Максимальная цена билета по компаниям"
+task: |
+  Для каждой авиакомпании выведи название и максимальную цену
+  проданного на её рейсы билета. Компании, у которых нет
+  проданных билетов, тоже должны попасть в результат, с ценой
+  NULL. Столбцы назови company_name и max_price.
+answer: "SELECT c.name AS company_name, (SELECT MAX(pit.price) FROM Pass_in_trip pit JOIN Trip t ON t.id = pit.trip WHERE t.company = c.id) AS max_price FROM Company c;"

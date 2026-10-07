@@ -1,0 +1,5 @@
+id: 30
+title: "Авиакомпании без рейсов"
+task: |
+  Выведи названия авиакомпаний, у которых нет ни одного рейса.
+answer: "SELECT name FROM Company WHERE NOT EXISTS (SELECT 1 FROM Trip WHERE Trip.company = Company.id);"

@@ -1,0 +1,6 @@
+id: 34
+title: "Билеты дороже средней цены своего рейса"
+task: |
+  Выведи билеты, цена которых выше средней цены билета на том же
+  рейсе. Столбцы назови ticket_id, trip_id и price.
+answer: "SELECT p.id AS ticket_id, p.trip AS trip_id, p.price AS price FROM Pass_in_trip p WHERE p.price > (SELECT AVG(price) FROM Pass_in_trip WHERE trip = p.trip);"

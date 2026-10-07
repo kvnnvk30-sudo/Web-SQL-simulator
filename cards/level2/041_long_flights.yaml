@@ -1,0 +1,7 @@
+id: 41
+title: "Длительные перелёты"
+task: |
+  Выведи рейсы, полёт которых длится дольше 4 часов (разница
+  между time_in и time_out), и длительность полёта в минутах,
+  целым числом. Столбцы назови trip_id и duration_minutes.
+answer: "SELECT id AS trip_id, (EXTRACT(EPOCH FROM (time_in - time_out)) / 60)::INTEGER AS duration_minutes FROM Trip WHERE time_in - time_out > INTERVAL '4 hours';"

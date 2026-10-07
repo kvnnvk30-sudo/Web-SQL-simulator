@@ -1,0 +1,7 @@
+id: 42
+title: "Возраст пассажиров"
+task: |
+  Выведи имена пассажиров, которым на 1 мая 2024 года
+  (2024-05-01) было больше 30 полных лет, и их возраст в полных
+  годах. Столбцы назови passenger_name и age.
+answer: "SELECT name AS passenger_name, DATE_PART('year', AGE(DATE '2024-05-01', birth_date))::INTEGER AS age FROM Passenger WHERE DATE_PART('year', AGE(DATE '2024-05-01', birth_date)) > 30;"

@@ -1,0 +1,7 @@
+id: 25
+title: "Выручка авиакомпаний"
+task: |
+  Для каждой авиакомпании посчитай выручку (сумму цен всех
+  проданных на её рейсы билетов) и выведи только компании с
+  выручкой больше 50000. Столбцы назови company_name и revenue.
+answer: "SELECT Company.name AS company_name, SUM(Pass_in_trip.price) AS revenue FROM Company JOIN Trip ON Trip.company = Company.id JOIN Pass_in_trip ON Pass_in_trip.trip = Trip.id GROUP BY Company.id, Company.name HAVING SUM(Pass_in_trip.price) > 50000;"

@@ -7,7 +7,7 @@
 
   <aside class="side-panel">
     <div class="task-block">
-      <span class="pane-label">Задание №{{ card.id }}</span>
+      <span class="pane-label">Уровень {{ level }} · Задание №{{ card.id }}</span>
       <h1 class="task-title">{{ card.title }}</h1>
       <p class="task-text">{{ card.task }}</p>
       <button class="answer-toggle" id="answerToggle" type="button">Показать эталонный запрос</button>
@@ -15,6 +15,13 @@
     </div>
 
     <div class="task-list-block">
+      <div class="level-switch" role="tablist" aria-label="Уровень">
+        {% for lv in levels %}
+        <a class="level-tab {% if lv == level %}level-tab-active{% endif %}"
+           href="{{ url_for('index', level=lv) }}" role="tab"
+           aria-selected="{{ 'true' if lv == level else 'false' }}">Уровень {{ lv }}</a>
+        {% endfor %}
+      </div>
       <span class="pane-label">Задания</span>
       <div class="task-list">
         {% for c in cards %}
@@ -81,8 +88,13 @@
 
 {% else %}
 <div class="empty-state">
-  <p>Карточек пока нет.</p>
-  <a class="run-btn" href="{{ url_for('cards_new') }}">Создать первую карточку</a>
+  <p>В уровне {{ level }} карточек пока нет.</p>
+  <a class="run-btn" href="{{ url_for('cards_new', level=level) }}">Создать карточку</a>
+  {% if levels|length > 1 %}
+  <p class="empty-levels">
+    {% for lv in levels if lv != level %}<a href="{{ url_for('index', level=lv) }}">Перейти на уровень {{ lv }}</a>{% endfor %}
+  </p>
+  {% endif %}
 </div>
 {% endif %}
 {% endblock %}

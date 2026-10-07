@@ -38,10 +38,9 @@ sql_flashcards/
 ├── schema/
 │   └── database.sql          # ЕДИНАЯ схема БД для ВСЕХ заданий: CREATE TABLE + INSERT
 │                              # (не трогать per-card!) — выполняется в PostgreSQL при старте
-├── cards/                    # каждое задание — отдельный *.yaml файл
-│   ├── 001_passenger_names.yaml
-│   ├── 002_trips_from_moscow.yaml
-│   └── 003_trips_and_companies.yaml
+├── cards/                    # каждое задание — отдельный *.yaml файл, уровень = папка
+│   ├── level1/               # уровень 1 (id 1…23)
+│   └── level2/               # уровень 2 (id с 24)
 ├── core/                     # вся бизнес-логика, без Flask-специфики
 │   ├── __init__.py           # пустой, просто помечает пакет
 │   ├── card_loader.py        # CRUD карточек: чтение/запись *.yaml
@@ -102,7 +101,36 @@ SCHEMA_LINKS = flatten_links(SCHEMA_TABLES)          # как и раньше
 `Company`, `Trip` (у Trip есть `company` → FK на `Company.id`),
 `Passenger`, `Pass_in_trip` (FK на `Trip.id` и `Passenger.id`).
 
-### 2. Формат карточки задания (`cards/NNN_slug.yaml`)
+### 1a. Уровни карточек
+
+Уровень карточки — это папка: `cards/level1/`, `cards/level2/`
+(`core/card_loader.py::LEVELS`, `_level_dir()`). Поля `level` в YAML
+НЕТ и добавлять его не нужно: `load_all_cards()` сам кладёт `level` в
+словарь карточки по папке, поэтому папка и уровень не расходятся.
+Файлы прямо в `cards/` считаются уровнем 1 (обратная совместимость).
+
+- `id` СКВОЗНЫЕ по всем уровням. Роуты `/card/<id>` и `/check` и
+  `load_card()` ищут по одному `id`; не делай нумерацию «с единицы» в
+  каждом уровне. `_next_id()` = максимум по всем уровням + 1.
+- `load_all_cards(level=None)` — все карточки или одного уровня;
+  `save_new_card(..., level)`; `update_card(..., level)` переносит
+  файл в папку нового уровня; неизвестный уровень → `ValueError`.
+- `app.py`: `_parse_level()` приводит `?level=` и поле формы к
+  допустимому уровню (мусор → уровень 1). `/` берёт случайную карточку
+  уровня из `?level=`; `/card/<id>` берёт уровень у самой карточки и
+  показывает в списке слева только его. `_render_trainer(card, cards,
+  level)` принимает уровень явно.
+- UI: переключатель `.level-switch` (ссылки `/?level=N`) в
+  `index.html` над списком заданий; колонка «Ур.» в `cards_list.html`;
+  `<select name="level">` в `edit_card.html`. JS и `localStorage` для
+  уровней не используются. Если добавляешь уровень — допиши его в
+  `LEVELS`, создай папку `cards/levelN/`; шаблоны подхватят его сами.
+- Проверка запроса (`checker.py`) не зависит от уровня. Названия
+  колонок по-прежнему сверяются строго, поэтому в заданиях, где
+  появляются выражения (агрегаты, `CASE`, окна), алиасы указываются
+  прямо в тексте задания («Столбцы назови company_name и ...»).
+
+### 2. Формат карточки задания (`cards/levelN/NNN_slug.yaml`)
 
 ```yaml
 id: 3

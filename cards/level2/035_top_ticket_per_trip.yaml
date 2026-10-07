@@ -1,0 +1,7 @@
+id: 35
+title: "Самый дорогой билет на каждом рейсе"
+task: |
+  Для каждого рейса выведи id рейса, имя пассажира и цену самого
+  дорогого билета на этом рейсе. Если таких билетов несколько,
+  выведи все. Столбцы назови trip_id, passenger_name и price.
+answer: "SELECT p.trip AS trip_id, Passenger.name AS passenger_name, p.price AS price FROM Pass_in_trip p JOIN Passenger ON Passenger.id = p.passenger WHERE p.price = (SELECT MAX(price) FROM Pass_in_trip WHERE trip = p.trip);"

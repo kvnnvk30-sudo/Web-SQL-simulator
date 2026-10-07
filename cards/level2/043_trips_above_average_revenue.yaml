@@ -1,0 +1,8 @@
+id: 43
+title: "Рейсы с выручкой выше средней"
+task: |
+  Выведи рейсы, выручка которых (сумма цен билетов) выше средней
+  выручки рейса, и саму выручку. Столбцы назови trip_id и
+  revenue. Подсказка: сначала посчитай выручку каждого рейса во
+  временной таблице WITH.
+answer: "WITH trip_revenue AS ( SELECT trip, SUM(price) AS revenue FROM Pass_in_trip GROUP BY trip ) SELECT trip AS trip_id, revenue FROM trip_revenue WHERE revenue > (SELECT AVG(revenue) FROM trip_revenue);"

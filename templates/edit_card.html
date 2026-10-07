@@ -10,6 +10,13 @@
         method="post"
         action="{% if card %}{{ url_for('cards_edit', card_id=card.id) }}{% else %}{{ url_for('cards_new') }}{% endif %}">
 
+    <label class="field-label" for="level">Уровень</label>
+    <select class="field-input" id="level" name="level">
+      {% for lv in levels %}
+      <option value="{{ lv }}" {% if lv == selected_level %}selected{% endif %}>Уровень {{ lv }}</option>
+      {% endfor %}
+    </select>
+
     <label class="field-label" for="title">Название</label>
     <input class="field-input" type="text" id="title" name="title" required
            value="{{ card.title if card else '' }}">

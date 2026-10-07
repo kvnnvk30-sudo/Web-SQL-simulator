@@ -1,0 +1,8 @@
+id: 27
+title: "Статистика по классам обслуживания"
+task: |
+  Для каждого класса обслуживания выведи класс, количество
+  проданных билетов (считай все билеты, в том числе без
+  указанной цены) и среднюю цену билета, округлённую до целого.
+  Столбцы назови class, tickets_count и avg_price.
+answer: "SELECT class, COUNT(*) AS tickets_count, ROUND(AVG(price)) AS avg_price FROM Pass_in_trip GROUP BY class;"

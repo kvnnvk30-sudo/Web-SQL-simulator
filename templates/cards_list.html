@@ -10,12 +10,13 @@
 {% if cards %}
 <table class="cards-table">
   <thead>
-    <tr><th>№</th><th>Название</th><th></th></tr>
+    <tr><th>№</th><th>Ур.</th><th>Название</th><th></th></tr>
   </thead>
   <tbody>
     {% for c in cards %}
     <tr>
       <td class="cards-table-id">{{ "%03d"|format(c.id) }}</td>
+      <td class="cards-table-level">{{ c.level }}</td>
       <td>
         <a class="cards-table-title" href="{{ url_for('card_detail', card_id=c.id) }}">{{ c.title }}</a>
       </td>

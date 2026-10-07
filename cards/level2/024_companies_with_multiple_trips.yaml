@@ -1,0 +1,7 @@
+id: 24
+title: "Авиакомпании с несколькими рейсами"
+task: |
+  Выведи названия авиакомпаний, которые выполняют больше одного
+  рейса, и количество их рейсов. Столбцы назови company_name и
+  trip_count.
+answer: "SELECT Company.name AS company_name, COUNT(Trip.id) AS trip_count FROM Company JOIN Trip ON Trip.company = Company.id GROUP BY Company.id, Company.name HAVING COUNT(Trip.id) > 1;"

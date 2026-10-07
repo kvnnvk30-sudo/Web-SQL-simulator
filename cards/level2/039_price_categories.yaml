@@ -1,0 +1,8 @@
+id: 39
+title: "Категории цен"
+task: |
+  Для каждого билета выведи id, цену и категорию цены:
+  'unknown', если цена не указана; 'cheap', если она меньше
+  20000; 'medium', если от 20000 до 49999; 'premium', если 50000
+  и больше. Столбцы назови ticket_id, price и price_category.
+answer: "SELECT id AS ticket_id, price, CASE WHEN price IS NULL THEN 'unknown' WHEN price < 20000 THEN 'cheap' WHEN price < 50000 THEN 'medium' ELSE 'premium' END AS price_category FROM Pass_in_trip;"
